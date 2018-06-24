@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/unitychan_GIRIGIRI.unity
-  isLoaded: 1
-  isActive: 1
