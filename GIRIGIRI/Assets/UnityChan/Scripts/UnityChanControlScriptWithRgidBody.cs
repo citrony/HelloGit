@@ -19,7 +19,6 @@ namespace UnityChan
 
 
         public float animSpeed = 1.5f;				// アニメーション再生速度設定
-		public float lookSmoother = 3.0f;			// a smoothing setting for camera motion
 		public bool useCurves = true;				// Mecanimでカーブ調整を使うか設定する
 		// このスイッチが入っていないとカーブは使われない
 		public float useCurvesHeight = 0.5f;		// カーブ補正の有効高さ（地面をすり抜けやすい時には大きくする）
@@ -44,7 +43,6 @@ namespace UnityChan
 		private Animator anim;							// キャラにアタッチされるアニメーターへの参照
 		private AnimatorStateInfo currentBaseState;			// base layerで使われる、アニメーターの現在の状態の参照
 
-		private GameObject cameraObject;	// メインカメラへの参照
 		
 		// アニメーター各ステートへの参照
 		static int idleState = Animator.StringToHash ("Base Layer.Idle");
@@ -61,7 +59,6 @@ namespace UnityChan
 			col = GetComponent<CapsuleCollider> ();
 			rb = GetComponent<Rigidbody> ();
 			//メインカメラを取得する
-			cameraObject = GameObject.FindWithTag ("MainCamera");
 			// CapsuleColliderコンポーネントのHeight、Centerの初期値を保存する
 			orgColHight = col.height;
 			orgVectColCenter = col.center;
@@ -96,7 +93,7 @@ namespace UnityChan
 
                 //アニメーションのステートがLocomotionの最中のみジャンプできる
                 
-                if(currentBaseState.nameHash == locoState | currentBaseState.nameHash == idleState)
+                if(currentBaseState.fullPathHash == locoState | currentBaseState.fullPathHash == idleState)
                 {
                     //ステート遷移中でなかったらジャンプできる
                     if (!anim.IsInTransition(0))
@@ -118,7 +115,7 @@ namespace UnityChan
 			// 以下、Animatorの各ステート中での処理
 			// Locomotion中
 			// 現在のベースレイヤーがlocoStateの時
-			if (currentBaseState.nameHash == locoState) {
+			if (currentBaseState.fullPathHash == locoState) {
 				//カーブでコライダ調整をしている時は、念のためにリセットする
 				if (useCurves) {
 					resetCollider ();
@@ -126,7 +123,7 @@ namespace UnityChan
 			}
 		// JUMP中の処理
 		// 現在のベースレイヤーがjumpStateの時
-		else if (currentBaseState.nameHash == jumpState) {
+		else if (currentBaseState.fullPathHash == jumpState) {
 				//cameraObject.SendMessage ("setCameraPositionJumpView");	// ジャンプ中のカメラに変更
 				// ステートがトランジション中でない場合
 				if (!anim.IsInTransition (0)) {
@@ -162,7 +159,7 @@ namespace UnityChan
 			}
 		// IDLE中の処理
 		// 現在のベースレイヤーがidleStateの時
-		else if (currentBaseState.nameHash == idleState) {
+		else if (currentBaseState.fullPathHash == idleState) {
 				//カーブでコライダ調整をしている時は、念のためにリセットする
 				if (useCurves) {
 					resetCollider ();
@@ -174,7 +171,7 @@ namespace UnityChan
 			}
 		// REST中の処理
 		// 現在のベースレイヤーがrestStateの時
-		else if (currentBaseState.nameHash == restState) {
+		else if (currentBaseState.fullPathHash == restState) {
 				//cameraObject.SendMessage("setCameraPositionFrontView");		// カメラを正面に切り替える
 				// ステートが遷移中でない場合、Rest bool値をリセットする（ループしないようにする）
 				if (!anim.IsInTransition (0)) {
