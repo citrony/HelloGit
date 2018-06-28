@@ -10,6 +10,12 @@ public class GameStart : MonoBehaviour {
     {
         SceneManager.LoadScene("unitychan_GIRIGIRI");	
 	}
-	
-	
+
+    public void Update()
+    {
+        if (Input.GetKey(KeyCode.Return))
+        {
+            SceneManager.LoadScene("unitychan_GIRIGIRI");
+        }
+    }
 }

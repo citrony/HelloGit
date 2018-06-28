@@ -21,17 +21,15 @@ public class Timer : MonoBehaviour {
         seconds = (int)totalTime;
         timerText.text = "Time:" + seconds.ToString();
 
-        if (totalTime > 300)
+        if (totalTime < 10.0f)
         {
-            timerText.text = "Time:300";
+            timerText.color = Color.red;
         }
-
 
         if (totalTime < 0.0f)
         {
             MainCamera.SetActive(!MainCamera.activeSelf);
             FinishCamera.SetActive(!FinishCamera.activeSelf);
-           
         }
     }
 

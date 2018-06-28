@@ -15,8 +15,6 @@ namespace UnityChan
 
 	public class UnityChanControlScriptWithRgidBody : MonoBehaviour
 	{
-        
-
 
         public float animSpeed = 1.5f;				// アニメーション再生速度設定
 		public bool useCurves = true;				// Mecanimでカーブ調整を使うか設定する
@@ -75,11 +73,19 @@ namespace UnityChan
 			anim.speed = animSpeed;								// Animatorのモーション再生速度に animSpeedを設定する
 			currentBaseState = anim.GetCurrentAnimatorStateInfo (0);	// 参照用のステート変数にBase Layer (0)の現在のステートを設定する
 			rb.useGravity = true;//ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする
-		
-		    
-		
-			// 以下、キャラクターの移動処理
-			velocity = new Vector3 (0, 0, v);		// 上下のキー入力からZ軸方向の移動量を取得
+
+            float totalTime = 0.0f;
+
+            if (GameObject.Find("Main Camera"))
+            {
+                totalTime = GameObject.Find("Main Camera").GetComponent<Timer>().totalTime;
+            } else
+            {
+                totalTime = 0.0f;
+            }
+
+            // 以下、キャラクターの移動処理
+            velocity = new Vector3 (0, 0, v);		// 上下のキー入力からZ軸方向の移動量を取得
 			// キャラクターのローカル空間での方向に変換
 			velocity = transform.TransformDirection (velocity);
 			//以下のvの閾値は、Mecanim側のトランジションと一緒に調整する
@@ -106,16 +112,22 @@ namespace UnityChan
 		
 
 			// 上下のキー入力でキャラクターを移動させる
-			transform.localPosition += velocity * Time.fixedDeltaTime;
+            if (totalTime > 0.0f)
+            {
+			    transform.localPosition += velocity * Time.fixedDeltaTime;
+            }
 
-			// 左右のキー入力でキャラクタをY軸で旋回させる
-			transform.Rotate (0, h * rotateSpeed, 0);	
-	
+            // 左右のキー入力でキャラクタをY軸で旋回させる
+            if (totalTime > 0.0f)
+            {
+                transform.Rotate (0, h * rotateSpeed, 0);
+            }
 
-			// 以下、Animatorの各ステート中での処理
-			// Locomotion中
-			// 現在のベースレイヤーがlocoStateの時
-			if (currentBaseState.fullPathHash == locoState) {
+
+            // 以下、Animatorの各ステート中での処理
+            // Locomotion中
+            // 現在のベースレイヤーがlocoStateの時
+            if (currentBaseState.fullPathHash == locoState) {
 				//カーブでコライダ調整をしている時は、念のためにリセットする
 				if (useCurves) {
 					resetCollider ();

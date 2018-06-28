@@ -5,17 +5,20 @@ using UnityEngine;
 public class CubeEffect : MonoBehaviour {
 
     public AudioClip se;
-    Color a = new Color(116, 169, 260, 50);
 
     void OnCollisionStay(Collision col)
     {
+        if (GetComponent<Renderer>().material.color != new Color(116, 169, 260, 50))
+        {
         GetComponent<Renderer>().material.color = Color.black;
+        }
+
     }
     void OnCollisionExit(Collision col)
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            GetComponent<Renderer>().material.color = a;
+            GetComponent<Renderer>().material.color = new Color(116, 169, 260, 50);
             GetComponent<AudioSource>().PlayOneShot(se);
             gameObject.tag = "Item";
         }
