@@ -13,3 +13,4 @@
 6. git add .
 7. git commit -m"コミットメッセージ"
 8. git push origin 作ったブランチ名
+9. GitHubでプルリク投げる
