@@ -35,5 +35,8 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+# UnityAsset from The Store
+GIRIGIRI/Assets/ProCore.meta
 GIRIGIRI/Assets/ProCore/
+
 
